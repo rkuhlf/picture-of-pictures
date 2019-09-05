@@ -70,5 +70,7 @@ if (reformat_images):
 
 
 if (generate_new_image):
-    targetImage = random.choice(os.listdir(directory))
+    targetname = os.getcwd() + "/target_image.jpg"
+    targetImage = imread(targetname)
+
     print(targetImage)
