@@ -1,23 +1,38 @@
+import os, random
+from google_images_download import google_images_download  # importing the library
+from skimage.transform import rescale
+from skimage.io import imread, imsave
+from skimage.color import rgb2gray
+
+
+
 redownload_pictures = False
 turn_to_gray = False
 reformat_images = False
 generate_new_image = True
+targetImageWidth = 100
+targetImageHeight = 50
+
+
+
+def ComparePictures(img1, img2):]
+    total_dif = 0
+    for (x in range(img1.shape[0])):
+        for (y in range(img1.shape[1])):
+            total_dif += abs(img1[x, y] - img2[x, y])
+
+
 
 if (redownload_pictures):
-    from google_images_download import google_images_download  # importing the library
-
     response = google_images_download.googleimagesdownload()  # class instantiation
 
     arguments = {"keywords": "President", "limit": 40, "print_urls": True}  # creating list of arguments
     paths = response.download(arguments)  # passing the arguments to the function
     print(paths)  # printing absolute paths of the downloaded images
 
-import os, random
 
 folderToLoop = "President"
 directory = os.getcwd() + "/downloads/" + folderToLoop
-from skimage.io import imread, imsave
-from skimage.color import rgb2gray
 
 if (turn_to_gray):
 
@@ -32,10 +47,6 @@ if (turn_to_gray):
             print(e)
 
 if (reformat_images):
-    from skimage.transform import rescale
-
-    targetImageWidth = 100
-    targetImageHeight = 50
 
     for filename in os.listdir(directory):
         print(filename)
@@ -73,4 +84,17 @@ if (generate_new_image):
     targetname = os.getcwd() + "/target_image.jpg"
     targetImage = imread(targetname)
 
-    print(targetImage)
+
+    centerX = targetImage.shape(1) / 2
+    centerY = targetImage.shape(0) / 2
+    newWidth = targetImage.shape[1] - (targetImage.shape[1] % targetImageWidth)
+    newHeight = targetImage.shape[0] - (targetImage.shape[0] % targetImageHeight)
+    targetImage = img_rescaled[int(centerY - newHeight / 2):int(centerY + newHeight / 2), int(centerX - newWidth):int(centerX + newWidth)]
+
+    
+
+    
+    
+    
+    
+    
