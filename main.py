@@ -20,7 +20,7 @@ def ComparePictures(img1, img2):
     total_dif = 0
     for x in range(img1.shape[0]):
         for y in range(img1.shape[1]):
-            total_dif += abs(img1[x, y] - img2[x, y])
+            total_dif += abs(img1[x, y] - img2[x, y]) # change to measure black; make sure you read image as black and white
 
     return total_dif
 
@@ -88,27 +88,29 @@ if (generate_new_image):
     targetImage = imread(targetname)
 
 
-    centerX = targetImage.shape(1) / 2
-    centerY = targetImage.shape(0) / 2
+    centerX = targetImage.shape[1] / 2
+    centerY = targetImage.shape[0] / 2
     newWidth = targetImage.shape[1] - (targetImage.shape[1] % targetImageWidth)
     newHeight = targetImage.shape[0] - (targetImage.shape[0] % targetImageHeight)
-    targetImage = img_rescaled[int(centerY - newHeight / 2):int(centerY + newHeight / 2), int(centerX - newWidth):int(centerX + newWidth)]
+    targetImage = targetImage[int(centerY - newHeight / 2):int(centerY + newHeight / 2), int(centerX - newWidth):int(centerX + newWidth)]
 
 
     final_image = Image.new('RGB', (newWidth, newHeight))
-    for x in range(0, targetImage.shape(1) / targetImageWidth):
-        for y in range(0, targetImage.shape(0) / targetImageHeight):
+    for x in range(0, int(targetImage.shape[1] / targetImageWidth)):
+        for y in range(0, int(targetImage.shape[0] / targetImageHeight)):
             recordDifference = None
             recordFile = None
             for filename in os.listdir(directory):
-                f = imread(filename)
+                f = imread(directory + "/" + filename)
                 n = ComparePictures(targetImage[y:y + targetImageHeight, x:x + targetImageWidth], f)
 
-                if (recordDifference == None):
+                if recordDifference == None:
                     recordDifference = n
                     recordFile = f
 
-                if (n < recordDifference):
+                print(n)
+                # print(recordDifference)
+                if n < recordDifference:
                     recordDifference = n
                     recordFile = f
 
