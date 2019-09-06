@@ -1,8 +1,9 @@
-import os, random
+import os
 from google_images_download import google_images_download  # importing the library
-from skimage.transform import rescale
 from skimage.io import imread, imsave
+from skimage.transform import rescale
 from skimage.color import rgb2gray
+from PIL import Image
 
 
 
@@ -15,11 +16,13 @@ targetImageHeight = 50
 
 
 
-def ComparePictures(img1, img2):]
+def ComparePictures(img1, img2):
     total_dif = 0
-    for (x in range(img1.shape[0])):
-        for (y in range(img1.shape[1])):
+    for x in range(img1.shape[0]):
+        for y in range(img1.shape[1]):
             total_dif += abs(img1[x, y] - img2[x, y])
+
+    return total_dif
 
 
 
@@ -91,10 +94,26 @@ if (generate_new_image):
     newHeight = targetImage.shape[0] - (targetImage.shape[0] % targetImageHeight)
     targetImage = img_rescaled[int(centerY - newHeight / 2):int(centerY + newHeight / 2), int(centerX - newWidth):int(centerX + newWidth)]
 
-    
 
-    
-    
-    
-    
-    
+    final_image = Image.new('RGB', (newWidth, newHeight))
+    for x in range(0, targetImage.shape(1) / targetImageWidth):
+        for y in range(0, targetImage.shape(0) / targetImageHeight):
+            recordDifference = None
+            recordFile = None
+            for filename in os.listdir(directory):
+                f = imread(filename)
+                n = ComparePictures(targetImage[y:y + targetImageHeight, x:x + targetImageWidth], f)
+
+                if (recordDifference == None):
+                    recordDifference = n
+                    recordFile = f
+
+                if (n < recordDifference):
+                    recordDifference = n
+                    recordFile = f
+
+            # append the picture
+            final_image.paste(recordFile, (x, y))
+
+    final_image.save(directory + '/final_image.jpg')
+
