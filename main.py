@@ -35,7 +35,7 @@ if (redownload_pictures):
 
 
 folderToLoop = "President"
-directory = os.getcwd() + "/downloads/" + folderToLoop
+directory = os.getcwd() + "\\picture-of-pictures\\downloads\\" + folderToLoop
 
 if (turn_to_gray):
 
@@ -84,9 +84,9 @@ if (reformat_images):
 
 
 if (generate_new_image):
-    targetname = os.getcwd() + "/target_image.jpg"
+    targetname = os.getcwd() + "\\picture-of-pictures\\target_image.jpg"
     targetImage = imread(targetname)
-
+    targetImage = rgb2gray(targetImage)
 
     centerX = targetImage.shape[1] / 2
     centerY = targetImage.shape[0] / 2
@@ -106,16 +106,16 @@ if (generate_new_image):
 
                 if recordDifference == None:
                     recordDifference = n
-                    recordFile = f
+                    recordFile = directory + "/" + filename
 
-                print(n)
                 # print(recordDifference)
                 if n < recordDifference:
                     recordDifference = n
-                    recordFile = f
+                    recordFile = directory + "/" + filename
 
             # append the picture
-            final_image.paste(recordFile, (x, y))
+            print(x * targetImageWidth, y * targetImageHeight)
+            final_image.paste(Image.open(recordFile), (x * targetImageWidth, y * targetImageHeight))
 
     final_image.save(directory + '/final_image.jpg')
 
