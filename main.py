@@ -114,8 +114,10 @@ if (generate_new_image):
                     recordFile = directory + "/" + filename
 
             # append the picture
-            print(x * targetImageWidth, y * targetImageHeight)
-            final_image.paste(Image.open(recordFile), (x * targetImageWidth, y * targetImageHeight))
+            paste_x = y * targetImageHeight * 4
+            paste_y = x * targetImageWidth
+            print(paste_x, paste_y)
+            final_image.paste(Image.open(recordFile), (paste_x, paste_y))
 
-    final_image.save(directory + '/final_image.jpg')
+    final_image.save(os.getcwd() + '/final_image.jpg')
 
