@@ -10,10 +10,12 @@ from PIL import Image
 redownload_pictures = False
 turn_to_gray = False
 reformat_images = False
-generate_new_image = True
+generate_new_image = False
 targetImageWidth = 100
 targetImageHeight = 50
 folder_path = "" # \\picture-of-pictures
+folderToLoop = "President"
+directory = os.getcwd() + folder_path + "\\downloads\\" + folderToLoop
 
 
 
@@ -21,10 +23,14 @@ def ComparePictures(img1, img2):
     total_dif = 0
     for x in range(img1.shape[0]):
         for y in range(img1.shape[1]):
-            total_dif += abs(img1[x, y] - img2[x, y]) # change to measure black; make sure you read image as black and white
+            total_dif += abs(int(img1[x, y]) - int(img2[x, y])) # change to measure black; make sure you read image as black and white
 
     return total_dif
 
+f1 = directory + "\\1.220px-Donald_Trump_official_portrait_%28cropped%29.jpg"
+f2 = directory + "\\2.170117_Obamaedit-1-1250x650.jpg"
+
+print(ComparePictures(imread(f1), imread(f2)))
 
 
 if (redownload_pictures):
@@ -35,8 +41,6 @@ if (redownload_pictures):
     print(paths)  # printing absolute paths of the downloaded images
 
 
-folderToLoop = "President"
-directory = os.getcwd() + folder_path + "\\downloads\\" + folderToLoop
 
 if (turn_to_gray):
 
