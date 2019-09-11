@@ -13,6 +13,7 @@ reformat_images = False
 generate_new_image = True
 targetImageWidth = 100
 targetImageHeight = 50
+folder_path = "" # \\picture-of-pictures
 
 
 
@@ -35,7 +36,7 @@ if (redownload_pictures):
 
 
 folderToLoop = "President"
-directory = os.getcwd() + "\\picture-of-pictures\\downloads\\" + folderToLoop
+directory = os.getcwd() + folder_path + "\\downloads\\" + folderToLoop
 
 if (turn_to_gray):
 
@@ -84,7 +85,7 @@ if (reformat_images):
 
 
 if (generate_new_image):
-    targetname = os.getcwd() + "\\picture-of-pictures\\target_image.jpg"
+    targetname = os.getcwd() + folder_path + "\\big_target_image.jpg"
     targetImage = imread(targetname)
     targetImage = rgb2gray(targetImage)
 
@@ -102,7 +103,7 @@ if (generate_new_image):
             recordFile = None
             for filename in os.listdir(directory):
                 f = imread(directory + "/" + filename)
-                n = ComparePictures(targetImage[y:y + targetImageHeight, x:x + targetImageWidth], f)
+                n = ComparePictures(targetImage[y * targetImageHeight:(y + 1) * targetImageHeight, x * targetImageWidth:(x + 1) * targetImageWidth], f)
 
                 if recordDifference == None:
                     recordDifference = n
@@ -114,10 +115,10 @@ if (generate_new_image):
                     recordFile = directory + "/" + filename
 
             # append the picture
-            paste_x = y * targetImageHeight * 4
-            paste_y = x * targetImageWidth
+            paste_x = x * targetImageWidth * 2
+            paste_y = y * targetImageHeight * 2
             print(paste_x, paste_y)
             final_image.paste(Image.open(recordFile), (paste_x, paste_y))
 
-    final_image.save(os.getcwd() + '/final_image.jpg')
+    final_image.save(os.getcwd() + '/rename.jpg')
 
