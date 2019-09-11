@@ -85,7 +85,7 @@ if (reformat_images):
 
 
 if (generate_new_image):
-    targetname = os.getcwd() + folder_path + "\\big_target_image.jpg"
+    targetname = os.getcwd() + folder_path + "\\target_image.jpg"
     targetImage = imread(targetname)
     targetImage = rgb2gray(targetImage)
 
