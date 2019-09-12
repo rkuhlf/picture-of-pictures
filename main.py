@@ -10,27 +10,33 @@ from PIL import Image
 redownload_pictures = False
 turn_to_gray = False
 reformat_images = False
-generate_new_image = False
-targetImageWidth = 100
-targetImageHeight = 50
-folder_path = "" # \\picture-of-pictures
+generate_new_image = True
+targetImageWidth = 50
+targetImageHeight = 25
+folder_path = "\\picture-of-pictures"
 folderToLoop = "President"
 directory = os.getcwd() + folder_path + "\\downloads\\" + folderToLoop
 
 
 
 def ComparePictures(img1, img2):
+    # print(img1)
+    # print(img2)
     total_dif = 0
     for x in range(img1.shape[0]):
         for y in range(img1.shape[1]):
+            # print(str(int(img1[x, y])) + " - " + str(int(img2[x, y])))
             total_dif += abs(int(img1[x, y]) - int(img2[x, y])) # change to measure black; make sure you read image as black and white
 
     return total_dif
 
-f1 = directory + "\\1.220px-Donald_Trump_official_portrait_%28cropped%29.jpg"
-f2 = directory + "\\2.170117_Obamaedit-1-1250x650.jpg"
-
-print(ComparePictures(imread(f1), imread(f2)))
+# f1 = directory + "\\1.220px-Donald_Trump_official_portrait_%28cropped%29.jpg"
+# f2 = directory + "\\2.170117_Obamaedit-1-1250x650.jpg"
+# f3 = directory + "\\27.president-profile1.jpg"
+#
+#
+# print(ComparePictures(imread(f1), imread(f2)))
+# print(ComparePictures(imread(f1), imread(f3)))
 
 
 if (redownload_pictures):
@@ -107,7 +113,8 @@ if (generate_new_image):
             recordFile = None
             for filename in os.listdir(directory):
                 f = imread(directory + "/" + filename)
-                n = ComparePictures(targetImage[y * targetImageHeight:(y + 1) * targetImageHeight, x * targetImageWidth:(x + 1) * targetImageWidth], f)
+                n = ComparePictures(targetImage[y * targetImageHeight:(y + 1) * targetImageHeight, x * targetImageWidth:(x + 1) * targetImageWidth] * 255, f) # multiply target image height by 2?
+                # print(str(n) + " : " + filename)
 
                 if recordDifference == None:
                     recordDifference = n
@@ -118,11 +125,12 @@ if (generate_new_image):
                     recordDifference = n
                     recordFile = directory + "/" + filename
 
+            print("----" + recordFile + "----")
             # append the picture
             paste_x = x * targetImageWidth * 2
             paste_y = y * targetImageHeight * 2
             print(paste_x, paste_y)
-            final_image.paste(Image.open(recordFile), (paste_x, paste_y))
+            final_image.paste(Image.open(recordFile), (paste_x, paste_y)) # pasted x, y from top left # newHeight - paste_y - targetImageHeight
 
-    final_image.save(os.getcwd() + '/rename.jpg')
+    final_image.save(os.getcwd() + '/final_image.jpg')
 
