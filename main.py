@@ -9,10 +9,10 @@ from PIL import Image
 
 redownload_pictures = False
 turn_to_gray = False
-reformat_images = False
+reformat_images = True
 generate_new_image = True
-targetImageWidth = 50
-targetImageHeight = 25
+targetImageWidth = 30
+targetImageHeight = 15
 folder_path = "\\picture-of-pictures"
 folderToLoop = "President"
 directory = os.getcwd() + folder_path + "\\downloads\\" + folderToLoop
@@ -25,24 +25,22 @@ def ComparePictures(img1, img2):
     total_dif = 0
     for x in range(img1.shape[0]):
         for y in range(img1.shape[1]):
-            # print(str(int(img1[x, y])) + " - " + str(int(img2[x, y])))
-            total_dif += abs(int(img1[x, y]) - int(img2[x, y])) # change to measure black; make sure you read image as black and white
+            try:
+                # print(str(int(img1[x, y])) + " - " + str(int(img2[x, y])))
+                total_dif += abs(int(img1[x, y]) - int(img2[x, y])) # if undefined return math.inf
+            except:
+                total_dif += 255
 
     return total_dif
 
-# f1 = directory + "\\1.220px-Donald_Trump_official_portrait_%28cropped%29.jpg"
-# f2 = directory + "\\2.170117_Obamaedit-1-1250x650.jpg"
-# f3 = directory + "\\27.president-profile1.jpg"
-#
-#
-# print(ComparePictures(imread(f1), imread(f2)))
-# print(ComparePictures(imread(f1), imread(f3)))
 
 
 if (redownload_pictures):
     response = google_images_download.googleimagesdownload()  # class instantiation
 
-    arguments = {"keywords": "President", "limit": 40, "print_urls": True}  # creating list of arguments
+    if not (os.path.exists(os.getcwd() + folder_path + "\\downloads")):
+        os.mkdir(os.getcwd() + folder_path + "\\downloads")
+    arguments = {"keywords": "President", "output_directory": os.getcwd() + folder_path + "\\downloads", "limit": 150, "print_urls": True, "chromedriver": "C:\\Users\\Trevor and Riley\\Downloads\\chromedriver_win32\\chromedriver.exe"}  # creating list of arguments
     paths = response.download(arguments)  # passing the arguments to the function
     print(paths)  # printing absolute paths of the downloaded images
 
@@ -99,21 +97,30 @@ if (generate_new_image):
     targetImage = imread(targetname)
     targetImage = rgb2gray(targetImage)
 
+
     centerX = targetImage.shape[1] / 2
     centerY = targetImage.shape[0] / 2
-    newWidth = targetImage.shape[1] - (targetImage.shape[1] % targetImageWidth)
-    newHeight = targetImage.shape[0] - (targetImage.shape[0] % targetImageHeight)
-    targetImage = targetImage[int(centerY - newHeight / 2):int(centerY + newHeight / 2), int(centerX - newWidth):int(centerX + newWidth)]
+    newWidth = targetImage.shape[1] - (targetImage.shape[1] % (targetImageWidth * 2))
+    newHeight = targetImage.shape[0] - (targetImage.shape[0] % (targetImageHeight * 2))
+    targetImage = targetImage[int(centerY - newHeight * 2):int(centerY + newHeight * 2), int(centerX - newWidth * 2):int(centerX + newWidth * 2)]
+    imsave(targetname[:-4] + "using.jpg", targetImage)
+
 
 
     final_image = Image.new('RGB', (newWidth, newHeight))
-    for x in range(0, int(targetImage.shape[1] / targetImageWidth)):
-        for y in range(0, int(targetImage.shape[0] / targetImageHeight)):
+    for x in range(0, int(targetImage.shape[1] / (targetImageWidth)) + 1):
+        for y in range(0, int(targetImage.shape[0] / (targetImageHeight)) + 1):
             recordDifference = None
             recordFile = None
             for filename in os.listdir(directory):
-                f = imread(directory + "/" + filename)
-                n = ComparePictures(targetImage[y * targetImageHeight:(y + 1) * targetImageHeight, x * targetImageWidth:(x + 1) * targetImageWidth] * 255, f) # multiply target image height by 2?
+                try:
+                    f = imread(os.path.join(directory, filename))
+                except:
+                    continue
+                    print("Skipped bad file: " + filename)
+
+
+                n = ComparePictures(targetImage[y * targetImageHeight * 2:(y + 1) * targetImageHeight * 2, x * targetImageWidth * 2:(x + 1) * targetImageWidth * 2] * 255, f) # multiply target image height by 2?
                 # print(str(n) + " : " + filename)
 
                 if recordDifference == None:
@@ -131,6 +138,7 @@ if (generate_new_image):
             paste_y = y * targetImageHeight * 2
             print(paste_x, paste_y)
             final_image.paste(Image.open(recordFile), (paste_x, paste_y)) # pasted x, y from top left # newHeight - paste_y - targetImageHeight
+            # final_image.save(os.getcwd() + '/final_image' + str(x) + "," + str(y) + '.jpg')
 
     final_image.save(os.getcwd() + '/final_image.jpg')
 
