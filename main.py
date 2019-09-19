@@ -8,11 +8,11 @@ from PIL import Image
 
 
 redownload_pictures = False
-turn_to_gray = False
+turn_to_gray = True
 reformat_images = True
 generate_new_image = True
-targetImageWidth = 30
-targetImageHeight = 15
+targetImageWidth = 40
+targetImageHeight = 20
 folder_path = "\\picture-of-pictures"
 folderToLoop = "President"
 directory = os.getcwd() + folder_path + "\\downloads\\" + folderToLoop
@@ -40,7 +40,7 @@ if (redownload_pictures):
 
     if not (os.path.exists(os.getcwd() + folder_path + "\\downloads")):
         os.mkdir(os.getcwd() + folder_path + "\\downloads")
-    arguments = {"keywords": "President", "output_directory": os.getcwd() + folder_path + "\\downloads", "limit": 150, "print_urls": True, "chromedriver": "C:\\Users\\Trevor and Riley\\Downloads\\chromedriver_win32\\chromedriver.exe"}  # creating list of arguments
+    arguments = {"keywords": "President", "output_directory": os.getcwd() + folder_path + "\\downloads", "limit": 160, "print_urls": True, "chromedriver": "C:\\Users\\Trevor and Riley\\Downloads\\chromedriver_win32\\chromedriver.exe"}  # creating list of arguments
     paths = response.download(arguments)  # passing the arguments to the function
     print(paths)  # printing absolute paths of the downloaded images
 
